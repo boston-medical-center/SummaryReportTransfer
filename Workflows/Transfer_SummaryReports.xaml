@@ -1,11 +1,9 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="Transfer_EmergencyDepartment" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:uasa="clr-namespace:UiPath.Activities.System.Arrays;assembly=UiPath.System.Activities" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="Transfer_EmergencyDepartment" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:umae="clr-namespace:UiPath.Mail.Activities.Enums;assembly=UiPath.Mail.Activities" xmlns:usau="clr-namespace:UiPath.Shared.Activities.Utils;assembly=UiPath.Mail.Activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
     <x:Property Name="in_Config" Type="InArgument(scg:Dictionary(x:String, x:Object))" />
-    <x:Property Name="io_ListTransferedFilePaths" Type="InOutArgument(scg:List(x:String))" />
-    <x:Property Name="in_strSummaryReportName" Type="InArgument(x:String)" />
-    <x:Property Name="io_boolFilesTransfered" Type="InOutArgument(x:Boolean)" />
     <x:Property Name="in_strSourceFolderPath" Type="InArgument(x:String)" />
     <x:Property Name="in_strDestinationFolderPath" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="Transaction item to be processed. The type of this variable can be changed to match the transaction type in the process. For example, when processing data from a spreadsheet that is read into a DataTable, this type can be changed to DataRow. " Name="in_TransactionItem" Type="InArgument(ui:QueueItem)" />
   </x:Members>
   <VisualBasic.Settings>
     <x:Null />
@@ -46,6 +44,12 @@
       <x:String>UiPath.Platform.ResourceHandling</x:String>
       <x:String>System.Activities.Runtime.Collections</x:String>
       <x:String>UiPath.Activities.System.Arrays</x:String>
+      <x:String>UiPath.Mail</x:String>
+      <x:String>UiPath.Mail.Activities.Enums</x:String>
+      <x:String>UiPath.Shared.Activities.Utils</x:String>
+      <x:String>UiPath.Mail.Outlook.Activities</x:String>
+      <x:String>UiPath.Shared.Activities</x:String>
+      <x:String>UiPath.Mail.Activities</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -101,23 +105,40 @@
       <AssemblyReference>UiPath.Platform</AssemblyReference>
       <AssemblyReference>System.Memory.Data</AssemblyReference>
       <AssemblyReference>System.Linq.Async</AssemblyReference>
+      <AssemblyReference>System.CodeDom</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic.Forms</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic.Core</AssemblyReference>
+      <AssemblyReference>System.Linq.Async.Queryable</AssemblyReference>
+      <AssemblyReference>UiPath.Mail.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Mail</AssemblyReference>
+      <AssemblyReference>UiPath.Testing.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UIAutomationCore</AssemblyReference>
+      <AssemblyReference>UiPath.OCR.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Mail.Activities.Design</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Transfer_EmergencyDepartment" sap:VirtualizedContainerService.HintSize="1260,4402" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Transfer_EmergencyDepartment" sap:VirtualizedContainerService.HintSize="735.9999999999999,3495.3333333333335" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <TryCatch DisplayName="Try Catch 'Exception Handling'" sap:VirtualizedContainerService.HintSize="542,4379" sap2010:WorkflowViewState.IdRef="TryCatch_1">
+    <ui:LogMessage DisplayName="Log Message - Start" sap:VirtualizedContainerService.HintSize="542,176.66666666666666" sap2010:WorkflowViewState.IdRef="LogMessage_10" Level="Info" Message="[&quot;Start: Transfer Summary Report&quot;]" />
+    <TryCatch DisplayName="Try Catch 'Exception Handling'" sap:VirtualizedContainerService.HintSize="542,3132" sap2010:WorkflowViewState.IdRef="TryCatch_1">
       <TryCatch.Try>
-        <Sequence DisplayName="Transfer_SummaryReports" sap:VirtualizedContainerService.HintSize="540,4017" sap2010:WorkflowViewState.IdRef="Sequence_2">
+        <Sequence DisplayName="Transfer_SummaryReports" sap:VirtualizedContainerService.HintSize="540,2760.6666666666665" sap2010:WorkflowViewState.IdRef="Sequence_2">
           <Sequence.Variables>
-            <Variable x:TypeArguments="x:String" Name="strDate" />
-            <Variable x:TypeArguments="scg:List(x:String)" Name="ListDates" />
-            <Variable x:TypeArguments="scg:List(x:String)" Name="ListFilePaths" />
-            <Variable x:TypeArguments="x:String" Name="strLatestYearFolder" />
-            <Variable x:TypeArguments="x:String" Name="strLatestMonthFolder" />
+            <Variable x:TypeArguments="s:DateTime" Name="yesterdayDate" />
+            <Variable x:TypeArguments="x:String" Name="yearFolder" />
+            <Variable x:TypeArguments="x:String" Name="monthFolder" />
+            <Variable x:TypeArguments="x:String" Name="finalDestinationPath" />
+            <Variable x:TypeArguments="s:String[]" Name="sourceFiles" />
+            <Variable x:TypeArguments="s:String[]" Name="destinationFiles" />
+            <Variable x:TypeArguments="x:Boolean" Name="boolFilesTransfered" />
+            <Variable x:TypeArguments="x:String" Name="todayDateStr" />
+            <Variable x:TypeArguments="x:String" Name="fileName" />
+            <Variable x:TypeArguments="x:String" Name="yesterdayDateStr" />
           </Sequence.Variables>
           <sap:WorkflowViewStateService.ViewState>
             <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -125,213 +146,143 @@
               <x:Boolean x:Key="IsPinned">False</x:Boolean>
             </scg:Dictionary>
           </sap:WorkflowViewStateService.ViewState>
-          <If sap2010:Annotation.AnnotationText="Check Desintation folder is Empty" Condition="[Not(System.IO.Directory.GetDirectories(in_strDestinationFolderPath).tolist().Count&gt;0)]" DisplayName="Check atleast one year folder exist" sap:VirtualizedContainerService.HintSize="506,851" sap2010:WorkflowViewState.IdRef="If_3">
-            <sap:WorkflowViewStateService.ViewState>
-              <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                <x:Boolean x:Key="IsPinned">False</x:Boolean>
-                <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
-              </scg:Dictionary>
-            </sap:WorkflowViewStateService.ViewState>
+          <ui:MultipleAssign DisplayName="Multiple Assign Variables" sap:VirtualizedContainerService.HintSize="506,302.6666666666667" sap2010:WorkflowViewState.IdRef="MultipleAssign_1">
+            <ui:MultipleAssign.AssignOperations>
+              <scg:List x:TypeArguments="ui:AssignOperation" Capacity="8">
+                <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_1">
+                  <ui:AssignOperation.To>
+                    <OutArgument x:TypeArguments="s:DateTime">[yesterdayDate]</OutArgument>
+                  </ui:AssignOperation.To>
+                  <ui:AssignOperation.Value>
+                    <InArgument x:TypeArguments="s:DateTime">[Now.AddDays(-1)]</InArgument>
+                  </ui:AssignOperation.Value>
+                </ui:AssignOperation>
+                <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_3">
+                  <ui:AssignOperation.To>
+                    <OutArgument x:TypeArguments="x:String">[monthFolder]</OutArgument>
+                  </ui:AssignOperation.To>
+                  <ui:AssignOperation.Value>
+                    <InArgument x:TypeArguments="x:String">[yesterdayDate.ToString("MM")]</InArgument>
+                  </ui:AssignOperation.Value>
+                </ui:AssignOperation>
+                <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_2">
+                  <ui:AssignOperation.To>
+                    <OutArgument x:TypeArguments="x:String">[yearFolder]</OutArgument>
+                  </ui:AssignOperation.To>
+                  <ui:AssignOperation.Value>
+                    <InArgument x:TypeArguments="x:String">[yesterdayDate.ToString("yyyy")]</InArgument>
+                  </ui:AssignOperation.Value>
+                </ui:AssignOperation>
+                <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_5">
+                  <ui:AssignOperation.To>
+                    <OutArgument x:TypeArguments="x:String">[todayDateStr]</OutArgument>
+                  </ui:AssignOperation.To>
+                  <ui:AssignOperation.Value>
+                    <InArgument x:TypeArguments="x:String">[Now.ToString("MM_dd_yyyy")]</InArgument>
+                  </ui:AssignOperation.Value>
+                </ui:AssignOperation>
+                <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_6">
+                  <ui:AssignOperation.To>
+                    <OutArgument x:TypeArguments="x:String">[yesterdayDateStr]</OutArgument>
+                  </ui:AssignOperation.To>
+                  <ui:AssignOperation.Value>
+                    <InArgument x:TypeArguments="x:String">[yesterdayDate.ToString("MM_dd_yyyy")]</InArgument>
+                  </ui:AssignOperation.Value>
+                </ui:AssignOperation>
+                <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_4">
+                  <ui:AssignOperation.To>
+                    <OutArgument x:TypeArguments="x:String">[finalDestinationPath]</OutArgument>
+                  </ui:AssignOperation.To>
+                  <ui:AssignOperation.Value>
+                    <InArgument x:TypeArguments="x:String">[Path.Combine(in_strDestinationFolderPath, yearFolder, monthFolder)]</InArgument>
+                  </ui:AssignOperation.Value>
+                </ui:AssignOperation>
+              </scg:List>
+            </ui:MultipleAssign.AssignOperations>
+          </ui:MultipleAssign>
+          <If Condition="[Not Directory.Exists(finalDestinationPath)]" DisplayName="If - Check if final destination path exist, if not create" sap:VirtualizedContainerService.HintSize="506,532" sap2010:WorkflowViewState.IdRef="If_6">
             <If.Then>
-              <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="468,196" sap2010:WorkflowViewState.IdRef="Sequence_9">
+              <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="416,164.66666666666666" sap2010:WorkflowViewState.IdRef="Sequence_17">
                 <sap:WorkflowViewStateService.ViewState>
                   <scg:Dictionary x:TypeArguments="x:String, x:Object">
                     <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                   </scg:Dictionary>
                 </sap:WorkflowViewStateService.ViewState>
-                <Assign sap2010:Annotation.AnnotationText="Get the Date from First File from the Source Folder" DisplayName="Assign 'First Date'" sap:VirtualizedContainerService.HintSize="434,136" sap2010:WorkflowViewState.IdRef="Assign_7">
-                  <Assign.To>
-                    <OutArgument x:TypeArguments="x:String">[strDate]</OutArgument>
-                  </Assign.To>
-                  <Assign.Value>
-                    <InArgument x:TypeArguments="x:String">[Directory.GetFiles(in_strSourceFolderPath).Select(Function(f) System.Text.RegularExpressions.Regex.Match(f, "\d{2}_\d{2}_\d{4}").Value).orderby(Function(f) DateTime.ParseExact(f, "MM_dd_yyyy", System.Globalization.CultureInfo.InvariantCulture)).First]</InArgument>
-                  </Assign.Value>
-                  <sap:WorkflowViewStateService.ViewState>
-                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                      <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
-                    </scg:Dictionary>
-                  </sap:WorkflowViewStateService.ViewState>
-                </Assign>
+                <ui:CreateDirectory ContinueOnError="{x:Null}" Output="{x:Null}" DisplayName="Create Folder - Final path" sap:VirtualizedContainerService.HintSize="382,104.66666666666667" sap2010:WorkflowViewState.IdRef="CreateDirectory_3" Path="[finalDestinationPath]" />
               </Sequence>
             </If.Then>
             <If.Else>
-              <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="468,486" sap2010:WorkflowViewState.IdRef="Sequence_10">
+              <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="416,227.33333333333334" sap2010:WorkflowViewState.IdRef="Sequence_18">
                 <sap:WorkflowViewStateService.ViewState>
                   <scg:Dictionary x:TypeArguments="x:String, x:Object">
                     <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                    <x:Boolean x:Key="IsPinned">False</x:Boolean>
                   </scg:Dictionary>
                 </sap:WorkflowViewStateService.ViewState>
-                <Assign sap2010:Annotation.AnnotationText="Get Latest year folder from Destination folder" DisplayName="Assign 'Latest Year Folder'" sap:VirtualizedContainerService.HintSize="434,145" sap2010:WorkflowViewState.IdRef="Assign_8">
-                  <Assign.To>
-                    <OutArgument x:TypeArguments="x:String">[strLatestYearFolder]</OutArgument>
-                  </Assign.To>
-                  <Assign.Value>
-                    <InArgument x:TypeArguments="x:String">[System.IO.Directory.GetDirectories(in_strDestinationFolderPath).tolist().OrderByDescending(Function(X) DateTime.ParseExact(System.IO.Path.GetFileName(X), "yyyy", System.Globalization.CultureInfo.InvariantCulture).Year).First]</InArgument>
-                  </Assign.Value>
-                  <sap:WorkflowViewStateService.ViewState>
-                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                      <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
-                    </scg:Dictionary>
-                  </sap:WorkflowViewStateService.ViewState>
-                </Assign>
-                <Assign sap2010:Annotation.AnnotationText="Get Latest Month folder inside Latest Year folder from Destination folder" DisplayName="Assign 'Latest Month Folder'" sap:VirtualizedContainerService.HintSize="434,145" sap2010:WorkflowViewState.IdRef="Assign_9">
-                  <Assign.To>
-                    <OutArgument x:TypeArguments="x:String">[strLatestMonthFolder]</OutArgument>
-                  </Assign.To>
-                  <Assign.Value>
-                    <InArgument x:TypeArguments="x:String">[System.IO.Directory.GetDirectories(strLatestYearFolder).tolist().OrderByDescending(Function(X) DateTime.ParseExact(System.IO.Path.GetFileName(X), "MMMM", System.Globalization.CultureInfo.InvariantCulture).Month).First]</InArgument>
-                  </Assign.Value>
-                  <sap:WorkflowViewStateService.ViewState>
-                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                      <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
-                    </scg:Dictionary>
-                  </sap:WorkflowViewStateService.ViewState>
-                </Assign>
-                <Assign sap2010:Annotation.AnnotationText="Get Latest date file from Destination folder" DisplayName="Assign 'Latest Date'" sap:VirtualizedContainerService.HintSize="434,136" sap2010:WorkflowViewState.IdRef="Assign_1">
-                  <Assign.To>
-                    <OutArgument x:TypeArguments="x:String">[strDate]</OutArgument>
-                  </Assign.To>
-                  <Assign.Value>
-                    <InArgument x:TypeArguments="x:String">[Directory.GetFiles(strLatestMonthFolder).Select(Function(f) System.Text.RegularExpressions.Regex.Match(f, "\d{2}_\d{2}_\d{4}").Value).orderbydescending(Function(f) DateTime.ParseExact(f, "MM_dd_yyyy", System.Globalization.CultureInfo.InvariantCulture)).First]</InArgument>
-                  </Assign.Value>
-                  <sap:WorkflowViewStateService.ViewState>
-                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                      <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
-                    </scg:Dictionary>
-                  </sap:WorkflowViewStateService.ViewState>
-                </Assign>
+                <ui:LogMessage DisplayName="Log Message - path check" sap:VirtualizedContainerService.HintSize="382,167.33333333333334" sap2010:WorkflowViewState.IdRef="LogMessage_9" Level="Error" Message="[&quot;Path Exist&quot;]" />
               </Sequence>
             </If.Else>
           </If>
-          <Assign DisplayName="Assign 'List of Previous dates'" sap:VirtualizedContainerService.HintSize="506,114" sap2010:WorkflowViewState.IdRef="Assign_2">
+          <Assign DisplayName="Assign - Get files from source folder" sap:VirtualizedContainerService.HintSize="506,117.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_11">
             <Assign.To>
-              <OutArgument x:TypeArguments="scg:List(x:String)">[ListDates]</OutArgument>
+              <OutArgument x:TypeArguments="s:String[]">[sourceFiles]</OutArgument>
             </Assign.To>
             <Assign.Value>
-              <InArgument x:TypeArguments="scg:List(x:String)">[Enumerable.Range(0, (DateTime.Today - DateTime.ParseExact(strDate, "MM_dd_yyyy", System.Globalization.CultureInfo.InvariantCulture)).Days).Select(Function(X) DateTime.ParseExact(strDate, "MM_dd_yyyy", System.globalization.CultureInfo.InvariantCulture).AddDays(X).ToString("MM_dd_yyyy")).tolist()]</InArgument>
+              <InArgument x:TypeArguments="s:String[]">[Directory.GetFiles(in_strSourceFolderPath)]</InArgument>
             </Assign.Value>
           </Assign>
-          <Assign DisplayName="Assign 'List of File Path's'" sap:VirtualizedContainerService.HintSize="506,114" sap2010:WorkflowViewState.IdRef="Assign_3">
+          <Assign DisplayName="Assign - Get files from destination to compare" sap:VirtualizedContainerService.HintSize="506,117.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_12">
             <Assign.To>
-              <OutArgument x:TypeArguments="scg:List(x:String)">[ListFilePaths]</OutArgument>
+              <OutArgument x:TypeArguments="s:String[]">[destinationFiles]</OutArgument>
             </Assign.To>
             <Assign.Value>
-              <InArgument x:TypeArguments="scg:List(x:String)">[Directory.GetFiles(in_strSourceFolderPath).Where(Function(X) ListDates.Any(Function(Y) Y.Equals(System.Text.RegularExpressions.Regex.Match(X, "\d{2}_\d{2}_\d{4}").Value))).ToList()]</InArgument>
+              <InArgument x:TypeArguments="s:String[]">[Directory.GetFiles(finalDestinationPath).Select(Function(f) Path.GetFileName(f)).ToArray()]</InArgument>
             </Assign.Value>
           </Assign>
-          <ui:ForEach x:TypeArguments="x:String" CurrentIndex="{x:Null}" DisplayName="For Each File" sap:VirtualizedContainerService.HintSize="506,2301" sap2010:WorkflowViewState.IdRef="ForEach`1_2" Values="[ListFilePaths]">
+          <ui:ForEach x:TypeArguments="x:String" CurrentIndex="{x:Null}" DisplayName="For Each file- With the source folder" sap:VirtualizedContainerService.HintSize="506,947.3333333333334" sap2010:WorkflowViewState.IdRef="ForEach`1_3" Values="[sourceFiles]">
             <ui:ForEach.Body>
               <ActivityAction x:TypeArguments="x:String">
                 <ActivityAction.Argument>
-                  <DelegateInArgument x:TypeArguments="x:String" Name="currentText" />
+                  <DelegateInArgument x:TypeArguments="x:String" Name="file" />
                 </ActivityAction.Argument>
-                <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="504,2171" sap2010:WorkflowViewState.IdRef="Sequence_4">
-                  <Sequence.Variables>
-                    <Variable x:TypeArguments="x:String" Name="strYear" />
-                    <Variable x:TypeArguments="x:String" Name="strMonth" />
-                  </Sequence.Variables>
+                <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="504,815.3333333333334" sap2010:WorkflowViewState.IdRef="Sequence_19">
                   <sap:WorkflowViewStateService.ViewState>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
                       <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
-                  <Assign DisplayName="Assign 'Year'" sap:VirtualizedContainerService.HintSize="470,114" sap2010:WorkflowViewState.IdRef="Assign_5">
+                  <Assign DisplayName="Assign - File name that is being transferred" sap:VirtualizedContainerService.HintSize="470,117.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_14">
                     <Assign.To>
-                      <OutArgument x:TypeArguments="x:String">[strYear]</OutArgument>
+                      <OutArgument x:TypeArguments="x:String">[fileName]</OutArgument>
                     </Assign.To>
                     <Assign.Value>
-                      <InArgument x:TypeArguments="x:String">[DateTime.ParseExact(System.Text.RegularExpressions.Regex.Match(currentText.ToString, "\d{2}_\d{2}_\d{4}").Value, "MM_dd_yyyy", System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy")]</InArgument>
+                      <InArgument x:TypeArguments="x:String">[Path.GetFileName(file)]</InArgument>
                     </Assign.Value>
                   </Assign>
-                  <Assign DisplayName="Assign 'Month'" sap:VirtualizedContainerService.HintSize="470,114" sap2010:WorkflowViewState.IdRef="Assign_6">
-                    <Assign.To>
-                      <OutArgument x:TypeArguments="x:String">[strMonth]</OutArgument>
-                    </Assign.To>
-                    <Assign.Value>
-                      <InArgument x:TypeArguments="x:String">[DateTime.ParseExact(System.Text.RegularExpressions.Regex.Match(currentText.ToString, "\d{2}_\d{2}_\d{4}").Value, "MM_dd_yyyy", System.Globalization.CultureInfo.InvariantCulture).ToString("MMMM")]</InArgument>
-                    </Assign.Value>
-                  </Assign>
-                  <If Condition="[Not(System.IO.Directory.Exists(in_strDestinationFolderPath+&quot;\&quot;+strYear))]" DisplayName="Check Year Folder Exist in Destination Folder" sap:VirtualizedContainerService.HintSize="470,499" sap2010:WorkflowViewState.IdRef="If_1">
+                  <If Condition="[Not destinationFiles.Contains(Path.GetFileName(file)) and Not fileName.Contains(todayDateStr) and fileName.Contains(yesterdayDateStr)]" DisplayName="If- File is not already present in the folder" sap:VirtualizedContainerService.HintSize="470,638" sap2010:WorkflowViewState.IdRef="If_7">
                     <If.Then>
-                      <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="416,336" sap2010:WorkflowViewState.IdRef="Sequence_5">
+                      <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="468,416.6666666666667" sap2010:WorkflowViewState.IdRef="Sequence_20">
                         <sap:WorkflowViewStateService.ViewState>
                           <scg:Dictionary x:TypeArguments="x:String, x:Object">
                             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                           </scg:Dictionary>
                         </sap:WorkflowViewStateService.ViewState>
-                        <ui:CreateDirectory ContinueOnError="{x:Null}" Output="{x:Null}" DisplayName="Create Year Folder" sap:VirtualizedContainerService.HintSize="382,112" sap2010:WorkflowViewState.IdRef="CreateDirectory_1" Path="[in_strDestinationFolderPath+&quot;\&quot;+strYear]" />
-                        <ui:LogMessage DisplayName="Log Message - Created Year Folder" sap:VirtualizedContainerService.HintSize="382,164" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[&quot;Year &quot;+strYear+&quot; Folder created under &quot;+in_strDestinationFolderPath]" />
-                      </Sequence>
-                    </If.Then>
-                    <If.Else>
-                      <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="416,25" sap2010:WorkflowViewState.IdRef="Sequence_6">
-                        <sap:WorkflowViewStateService.ViewState>
-                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
-                            <x:Boolean x:Key="IsPinned">False</x:Boolean>
-                          </scg:Dictionary>
-                        </sap:WorkflowViewStateService.ViewState>
-                      </Sequence>
-                    </If.Else>
-                  </If>
-                  <If Condition="[Not(System.IO.Directory.Exists(in_strDestinationFolderPath+&quot;\&quot;+strYear+&quot;\&quot;+strMonth))]" DisplayName="Check Month Folder Exist in Destination Folder" sap:VirtualizedContainerService.HintSize="470,499" sap2010:WorkflowViewState.IdRef="If_2">
-                    <If.Then>
-                      <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="416,336" sap2010:WorkflowViewState.IdRef="Sequence_7">
-                        <sap:WorkflowViewStateService.ViewState>
-                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                          </scg:Dictionary>
-                        </sap:WorkflowViewStateService.ViewState>
-                        <ui:CreateDirectory ContinueOnError="{x:Null}" Output="{x:Null}" DisplayName="Create Month Folder" sap:VirtualizedContainerService.HintSize="382,112" sap2010:WorkflowViewState.IdRef="CreateDirectory_2" Path="[in_strDestinationFolderPath+&quot;\&quot;+strYear+&quot;\&quot;+strMonth]" />
-                        <ui:LogMessage DisplayName="Log Message - Created Month Folder" sap:VirtualizedContainerService.HintSize="382,164" sap2010:WorkflowViewState.IdRef="LogMessage_3" Level="Info" Message="[&quot;Month &quot;+strMonth+&quot; Folder created under &quot;+in_strDestinationFolderPath+&quot;\&quot;+strYear]" />
-                      </Sequence>
-                    </If.Then>
-                    <If.Else>
-                      <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="416,25" sap2010:WorkflowViewState.IdRef="Sequence_8">
-                        <sap:WorkflowViewStateService.ViewState>
-                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
-                            <x:Boolean x:Key="IsPinned">False</x:Boolean>
-                          </scg:Dictionary>
-                        </sap:WorkflowViewStateService.ViewState>
-                      </Sequence>
-                    </If.Else>
-                  </If>
-                  <If Condition="[Not(System.IO.File.Exists(in_strDestinationFolderPath+&quot;\&quot;+strYear+&quot;\&quot;+strMonth+&quot;\&quot;+System.IO.Path.GetFileName(currentText.ToString)))]" DisplayName="If - Destination Folder Path" sap:VirtualizedContainerService.HintSize="470,885" sap2010:WorkflowViewState.IdRef="If_5">
-                    <If.Then>
-                      <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="468,731" sap2010:WorkflowViewState.IdRef="Sequence_15">
-                        <sap:WorkflowViewStateService.ViewState>
-                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                          </scg:Dictionary>
-                        </sap:WorkflowViewStateService.ViewState>
-                        <ui:CopyFile ContinueOnError="{x:Null}" Destination="[in_strDestinationFolderPath+&quot;\&quot;+strYear+&quot;\&quot;+strMonth]" DisplayName="Copy File From Source To Destination" sap:VirtualizedContainerService.HintSize="434,186" sap2010:WorkflowViewState.IdRef="CopyFile_1" Overwrite="True" Path="[currentText]" />
-                        <uasa:AppendItemToList x:TypeArguments="x:String" ItemIndex="{x:Null}" sap2010:Annotation.AnnotationText="It will store the Transfered file paths to List to give as details in the mail body" DisplayName="Append Item to Destination" sap:VirtualizedContainerService.HintSize="434,207" sap2010:WorkflowViewState.IdRef="AppendItemToList`1_1" ItemToAppend="[in_strDestinationFolderPath+&quot;\&quot;+strYear+&quot;\&quot;+strMonth+&quot;\&quot;+System.IO.Path.GetFileName(currentText.ToString)]" List="[io_ListTransferedFilePaths]">
-                          <sap:WorkflowViewStateService.ViewState>
-                            <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                              <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
-                            </scg:Dictionary>
-                          </sap:WorkflowViewStateService.ViewState>
-                        </uasa:AppendItemToList>
-                        <ui:LogMessage DisplayName="Log Message - Copy to Destination" sap:VirtualizedContainerService.HintSize="434,173" sap2010:WorkflowViewState.IdRef="LogMessage_5" Level="Info" Message="[currentText+&quot; Copied to &quot;+in_strDestinationFolderPath+&quot;\&quot;+strYear+&quot;\&quot;+strMonth+&quot; Folder&quot;]" />
-                        <Assign DisplayName="Assign Bool_FilesTransfered as True" sap:VirtualizedContainerService.HintSize="434,105" sap2010:WorkflowViewState.IdRef="Assign_10">
+                        <ui:CopyFile ContinueOnError="{x:Null}" Destination="[finalDestinationPath]" DisplayName="Copy File - Final destination folder" sap:VirtualizedContainerService.HintSize="434,191.33333333333334" sap2010:WorkflowViewState.IdRef="CopyFile_2" Overwrite="True" Path="[file]" />
+                        <Assign DisplayName="Assign - transfer check" sap:VirtualizedContainerService.HintSize="434,117.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_13">
                           <Assign.To>
-                            <OutArgument x:TypeArguments="x:Boolean">[io_BoolFilesTransfered]</OutArgument>
+                            <OutArgument x:TypeArguments="x:Boolean">[boolFilesTransfered]</OutArgument>
                           </Assign.To>
                           <Assign.Value>
                             <InArgument x:TypeArguments="x:Boolean">True</InArgument>
                           </Assign.Value>
                         </Assign>
+                        <ui:Break DisplayName="Break - found" sap:VirtualizedContainerService.HintSize="434,48" sap2010:WorkflowViewState.IdRef="Break_1" />
                       </Sequence>
                     </If.Then>
                     <If.Else>
-                      <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="468,25" sap2010:WorkflowViewState.IdRef="Sequence_16">
+                      <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="468,90.66666666666667" sap2010:WorkflowViewState.IdRef="Sequence_21">
                         <sap:WorkflowViewStateService.ViewState>
                           <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
-                            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                           </scg:Dictionary>
                         </sap:WorkflowViewStateService.ViewState>
                       </Sequence>
@@ -341,25 +292,50 @@
               </ActivityAction>
             </ui:ForEach.Body>
           </ui:ForEach>
-          <If Condition="[io_BoolFilesTransfered = True]" DisplayName="If - FilesTransfer" sap:VirtualizedContainerService.HintSize="506,577" sap2010:WorkflowViewState.IdRef="If_4">
+          <If sap2010:Annotation.AnnotationText="This condiiton will check the files are transferred for current Summary report name and send mail" Condition="[boolFilesTransfered]" DisplayName="If 'Check file transfered'" sap:VirtualizedContainerService.HintSize="506,684" sap2010:WorkflowViewState.IdRef="If_8">
+            <sap:WorkflowViewStateService.ViewState>
+              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                <x:Boolean x:Key="IsPinned">False</x:Boolean>
+              </scg:Dictionary>
+            </sap:WorkflowViewStateService.ViewState>
             <If.Then>
-              <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="416,224" sap2010:WorkflowViewState.IdRef="Sequence_13">
+              <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="416,228" sap2010:WorkflowViewState.IdRef="Sequence_22">
                 <sap:WorkflowViewStateService.ViewState>
                   <scg:Dictionary x:TypeArguments="x:String, x:Object">
                     <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                   </scg:Dictionary>
                 </sap:WorkflowViewStateService.ViewState>
-                <ui:LogMessage DisplayName="Log Message - Files Found" sap:VirtualizedContainerService.HintSize="382,164" sap2010:WorkflowViewState.IdRef="LogMessage_6" Level="Info" Message="[in_strSummaryReportName+&quot; files found and  Transferred to Destination Folder Successfully&quot;]" />
+                <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Send_Emails - Invoke Workflow File (Workflows\Send_Emails.xaml)" sap:VirtualizedContainerService.HintSize="382,168" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="Workflows\Send_Emails.xaml">
+                  <ui:InvokeWorkflowFile.Arguments>
+                    <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" x:Key="in_Config">[in_Config]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strSummaryReportName">[in_TransactionItem.SpecificContent("Summary Report Name").ToString]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strRecipientMailIDs">[in_TransactionItem.SpecificContent("Recipient Mail IDs").ToString]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_TransferredFile">[finalDestinationPath+"\"+fileName]</InArgument>
+                  </ui:InvokeWorkflowFile.Arguments>
+                </ui:InvokeWorkflowFile>
               </Sequence>
             </If.Then>
             <If.Else>
-              <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="416,224" sap2010:WorkflowViewState.IdRef="Sequence_14">
+              <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="416,280" sap2010:WorkflowViewState.IdRef="Sequence_23">
                 <sap:WorkflowViewStateService.ViewState>
                   <scg:Dictionary x:TypeArguments="x:String, x:Object">
                     <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                   </scg:Dictionary>
                 </sap:WorkflowViewStateService.ViewState>
-                <ui:LogMessage DisplayName="Log Message - No New Files" sap:VirtualizedContainerService.HintSize="382,164" sap2010:WorkflowViewState.IdRef="LogMessage_7" Level="Info" Message="[&quot;No New files are found to Transfer&quot;]" />
+                <ui:SendOutlookMail Bcc="{x:Null}" Cc="{x:Null}" ContinueOnError="{x:Null}" MailMessage="{x:Null}" ReplyTo="{x:Null}" TimeoutMS="{x:Null}" Account="[in_Config(&quot;Summary_FromMailID&quot;).ToString.Trim]" Body="[String.Format(in_Config(&quot;Mail_Body_NoFilesFound&quot;).ToString, Today.AddDays(-1).ToString(&quot;MM/dd/yyyy&quot;))]" ConnectionMode="LegacyConfiguration" DisplayName="Send Outlook Desktop Mail Message" sap:VirtualizedContainerService.HintSize="382,220" sap2010:WorkflowViewState.IdRef="SendOutlookMail_1" Importance="Normal" IsBodyHtml="False" IsDraft="False" Sensitivity="Normal" Subject="[String.Format(in_Config(&quot;Mail_Subject&quot;).ToString, in_TransactionItem.SpecificContent(&quot;Summary Report Name&quot;).ToString, DateTime.Now.adddays(-1).ToString(&quot;MM/dd/yyyy&quot;))]" To="[in_TransactionItem.SpecificContent(&quot;Recipient Mail IDs&quot;).ToString]" UseISConnection="False">
+                  <ui:SendOutlookMail.ConnectionDetailsBackupSlot>
+                    <usau:BackupSlot x:TypeArguments="umae:ConnectionDetails" StoredValue="{x:Null}">
+                      <usau:BackupSlot.BackupValues>
+                        <scg:Dictionary x:TypeArguments="umae:ConnectionDetails, scg:List(x:Object)" />
+                      </usau:BackupSlot.BackupValues>
+                    </usau:BackupSlot>
+                  </ui:SendOutlookMail.ConnectionDetailsBackupSlot>
+                  <ui:SendOutlookMail.Files>
+                    <scg:List x:TypeArguments="InArgument(x:String)" Capacity="0" />
+                  </ui:SendOutlookMail.Files>
+                </ui:SendOutlookMail>
               </Sequence>
             </If.Else>
           </If>
@@ -392,5 +368,6 @@
         </Sequence>
       </TryCatch.Finally>
     </TryCatch>
+    <ui:LogMessage DisplayName="Log Message - End" sap:VirtualizedContainerService.HintSize="542,164" sap2010:WorkflowViewState.IdRef="LogMessage_11" Level="Info" Message="[&quot;End: Transfer Summary Report&quot;]" />
   </Sequence>
 </Activity>

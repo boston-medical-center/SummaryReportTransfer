@@ -1,9 +1,9 @@
 <Activity mc:Ignorable="sap sap2010" x:Class="Send_Emails" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:umae="clr-namespace:UiPath.Mail.Activities.Enums;assembly=UiPath.Mail.Activities" xmlns:usau="clr-namespace:UiPath.Shared.Activities.Utils;assembly=UiPath.Mail.Activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
-    <x:Property Name="in_ListTransferedFiles" Type="InArgument(scg:List(x:String))" />
     <x:Property Name="in_Config" Type="InArgument(scg:Dictionary(x:String, x:Object))" />
     <x:Property Name="in_strSummaryReportName" Type="InArgument(x:String)" />
     <x:Property Name="in_strRecipientMailIDs" Type="InArgument(x:String)" />
+    <x:Property Name="in_TransferredFile" Type="InArgument(x:String)" />
   </x:Members>
   <VisualBasic.Settings>
     <x:Null />
@@ -105,52 +105,49 @@
       <AssemblyReference>System.CodeDom</AssemblyReference>
       <AssemblyReference>Microsoft.VisualBasic.Forms</AssemblyReference>
       <AssemblyReference>Microsoft.VisualBasic.Core</AssemblyReference>
+      <AssemblyReference>UiPath.Workflow</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Send_Emails" sap:VirtualizedContainerService.HintSize="1260,1431" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Send_Emails" sap:VirtualizedContainerService.HintSize="735.9999999999999,1578.6666666666667" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <TryCatch DisplayName="Try Catch'Exception Handling' Sending Email" sap:VirtualizedContainerService.HintSize="470,1408" sap2010:WorkflowViewState.IdRef="TryCatch_1">
+    <ui:LogMessage DisplayName="Log Message - Start" sap:VirtualizedContainerService.HintSize="470,176.66666666666666" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[&quot;Start: Send Email&quot;]" />
+    <TryCatch DisplayName="Try Catch'Exception Handling' Sending Email" sap:VirtualizedContainerService.HintSize="470,1212" sap2010:WorkflowViewState.IdRef="TryCatch_1">
       <TryCatch.Try>
-        <Sequence DisplayName="Sequence 'Send Emails'" sap:VirtualizedContainerService.HintSize="468,1046" sap2010:WorkflowViewState.IdRef="Sequence_2">
+        <Sequence DisplayName="Sequence 'Send Emails'" sap:VirtualizedContainerService.HintSize="468,839.3333333333334" sap2010:WorkflowViewState.IdRef="Sequence_2">
           <Sequence.Variables>
-            <Variable x:TypeArguments="x:String" Name="StrTransferedFilesList" />
             <Variable x:TypeArguments="x:String" Name="HTMLMailBody" />
-            <Variable x:TypeArguments="x:String" Name="formattedLinks" />
           </Sequence.Variables>
           <sap:WorkflowViewStateService.ViewState>
             <scg:Dictionary x:TypeArguments="x:String, x:Object">
               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             </scg:Dictionary>
           </sap:WorkflowViewStateService.ViewState>
-          <Assign DisplayName="Convert List to String" sap:VirtualizedContainerService.HintSize="434,114" sap2010:WorkflowViewState.IdRef="Assign_4">
+          <Assign DisplayName="Assign - File Path Space" sap:VirtualizedContainerService.HintSize="434,117.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_5">
             <Assign.To>
-              <OutArgument x:TypeArguments="x:String">[StrTransferedFilesList]</OutArgument>
+              <OutArgument x:TypeArguments="x:String">[in_TransferredFile]</OutArgument>
             </Assign.To>
             <Assign.Value>
-              <InArgument x:TypeArguments="x:String">[String.Join(Environment.NewLine, in_ListTransferedFiles)]</InArgument>
+              <InArgument x:TypeArguments="x:String">[in_TransferredFile.Replace(" ", in_Config("FilePathSpace").tostring)]</InArgument>
             </Assign.Value>
           </Assign>
-          <ui:InvokeCode ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="It will make the list of File paths as a Hyperlinks to use in the Mail body" Code="Dim linksArray() As String = Str_TransferedFilesList.Split({vbCrLf}, StringSplitOptions.RemoveEmptyEntries)&#xA;formattedLinks = &quot;&quot;&#xA;&#xA;For Each link As String In linksArray&#xA;    formattedLinks &amp;= &quot;&lt;a href='&quot; &amp; link.Trim() &amp; &quot;' target='_blank'&gt;&quot; &amp; link.Trim() &amp; &quot;&lt;/a&gt;&lt;br&gt;&quot;&#xA;Next" DisplayName="Invoke Code - Create Hyperlink" sap:VirtualizedContainerService.HintSize="434,239" sap2010:WorkflowViewState.IdRef="InvokeCode_1">
-            <ui:InvokeCode.Arguments>
-              <InArgument x:TypeArguments="x:String" x:Key="Str_TransferedFilesList">[StrTransferedFilesList]</InArgument>
-              <OutArgument x:TypeArguments="x:String" x:Key="formattedLinks">[formattedLinks]</OutArgument>
-            </ui:InvokeCode.Arguments>
-            <sap:WorkflowViewStateService.ViewState>
-              <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
-              </scg:Dictionary>
-            </sap:WorkflowViewStateService.ViewState>
-          </ui:InvokeCode>
-          <Assign sap2010:Annotation.AnnotationText="HTML code for mail body" DisplayName="Assign 'HTML Mail Body'" sap:VirtualizedContainerService.HintSize="434,145" sap2010:WorkflowViewState.IdRef="Assign_2">
+          <Assign DisplayName="Assign - NetworkFilePathAdd" sap:VirtualizedContainerService.HintSize="434,117.33333333333333" sap2010:WorkflowViewState.IdRef="Assign_7">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:String">[in_TransferredFile]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:String">[in_Config("NetworkFilePathAdd").ToString+in_TransferredFile]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign sap2010:Annotation.AnnotationText="HTML code for mail body" DisplayName="Assign 'HTML Mail Body'" sap:VirtualizedContainerService.HintSize="434,148" sap2010:WorkflowViewState.IdRef="Assign_6">
             <Assign.To>
               <OutArgument x:TypeArguments="x:String">[HTMLMailBody]</OutArgument>
             </Assign.To>
             <Assign.Value>
-              <InArgument x:TypeArguments="x:String">[String.Format(in_Config("Mail_Body").ToString, in_strSummaryReportName, Now.adddays(-1).ToString("MM/dd/yyyy"), formattedLinks)]</InArgument>
+              <InArgument x:TypeArguments="x:String">[in_Config("Mail_Body").ToString.Replace("[Report Name]",in_strSummaryReportName).Replace("[Date]",Now.adddays(-1).ToString("MM/dd/yyyy")).Replace("[FilePath]",in_TransferredFile)]</InArgument>
             </Assign.Value>
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -158,7 +155,7 @@
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
           </Assign>
-          <ui:SendOutlookMail Account="[in_Config(&quot;Summary_FromMailID&quot;).ToString.Trim]" AttachmentsCollection="{x:Null}" Bcc="{x:Null}" Body="[HTMLMailBody]" Cc="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Send Outlook Desktop Mail Message" sap:VirtualizedContainerService.HintSize="434,324" sap2010:WorkflowViewState.IdRef="SendOutlookMail_1" Importance="Normal" IsBodyHtml="True" IsDraft="False" MailMessage="{x:Null}" ReplyTo="{x:Null}" Sensitivity="Normal" SentOnBehalfOfName="{x:Null}" Subject="[String.Format(in_Config(&quot;Mail_Subject&quot;).ToString, in_strSummaryReportName, DateTime.Now.adddays(-1).ToString(&quot;MM/dd/yyyy&quot;))]" TimeoutMS="{x:Null}" To="[in_strRecipientMailIDs]" UseISConnection="True">
+          <ui:SendOutlookMail Bcc="{x:Null}" Cc="{x:Null}" ContinueOnError="{x:Null}" MailMessage="{x:Null}" ReplyTo="{x:Null}" TimeoutMS="{x:Null}" Account="[in_Config(&quot;Summary_FromMailID&quot;).ToString.Trim]" Body="[HTMLMailBody]" ConnectionMode="IntegrationService" DisplayName="Send Outlook Desktop Mail Message -" sap:VirtualizedContainerService.HintSize="434,229.33333333333334" sap2010:WorkflowViewState.IdRef="SendOutlookMail_1" Importance="Normal" IsBodyHtml="True" IsDraft="False" Sensitivity="Normal" Subject="[String.Format(in_Config(&quot;Mail_Subject&quot;).ToString, in_strSummaryReportName, DateTime.Now.adddays(-1).ToString(&quot;MM/dd/yyyy&quot;))]" To="[in_strRecipientMailIDs]" UseISConnection="True">
             <ui:SendOutlookMail.ConnectionDetailsBackupSlot>
               <usau:BackupSlot x:TypeArguments="umae:ConnectionDetails" StoredValue="{x:Null}">
                 <usau:BackupSlot.BackupValues>
@@ -170,7 +167,7 @@
               <scg:List x:TypeArguments="InArgument(x:String)" Capacity="0" />
             </ui:SendOutlookMail.Files>
           </ui:SendOutlookMail>
-          <ui:LogMessage DisplayName="Log Message - Email Sent" sap:VirtualizedContainerService.HintSize="434,164" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;Success Mail Sent to the Recipient&quot;]" />
+          <ui:LogMessage DisplayName="Log Message - Email Sent" sap:VirtualizedContainerService.HintSize="434,167.33333333333334" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;Success Mail Sent to the Recipient&quot;]" />
         </Sequence>
       </TryCatch.Try>
       <TryCatch.Catches>
@@ -191,7 +188,7 @@
         </Catch>
       </TryCatch.Catches>
       <TryCatch.Finally>
-        <Sequence DisplayName="Finally" sap:VirtualizedContainerService.HintSize="468,89" sap2010:WorkflowViewState.IdRef="Sequence_5">
+        <Sequence DisplayName="Finally" sap:VirtualizedContainerService.HintSize="468,90.66666666666667" sap2010:WorkflowViewState.IdRef="Sequence_5">
           <sap:WorkflowViewStateService.ViewState>
             <scg:Dictionary x:TypeArguments="x:String, x:Object">
               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -200,5 +197,6 @@
         </Sequence>
       </TryCatch.Finally>
     </TryCatch>
+    <ui:LogMessage DisplayName="Log Message - End" sap:VirtualizedContainerService.HintSize="470,167.33333333333334" sap2010:WorkflowViewState.IdRef="LogMessage_3" Level="Info" Message="[&quot;End: Send Email&quot;]" />
   </Sequence>
 </Activity>
